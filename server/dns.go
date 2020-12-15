@@ -5,8 +5,9 @@ import (
 	"net"
 
 	"github.com/coocood/freecache"
+	socks5 "github.com/extrame/go-socks5"
 
-	"github.com/elvizlai/grpc-socks/pb"
+	"github.com/extrame/grpc-socks/pb"
 )
 
 type DNSResolver struct {
@@ -19,15 +20,18 @@ var nameCtxKey = struct{}{}
 
 // DNSResolver uses the remote DNS to resolve host names
 func (d DNSResolver) Resolve(ctx context.Context, name string) (context.Context, net.IP, error) {
-	ctx = context.WithValue(ctx, nameCtxKey, name)
+	var clientId = ctx.Value(socks5.ClientID).(string)
 
 	if v, err := d.cache.Get([]byte(name)); err == nil {
 		return ctx, v, nil
 	}
 
-	ipResp, err := proxyClient.ResolveIP(ctx, &pb.IPAddr{
+	var grpcClient = selectClient(clientId)
+
+	ipResp, err := grpcClient.ResolveIP(ctx, &pb.IPAddr{
 		Address: name,
 	})
+
 	if err == nil {
 		d.cache.Set([]byte(name), ipResp.Data, expireSeconds)
 	}

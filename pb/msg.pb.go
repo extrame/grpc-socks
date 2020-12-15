@@ -3,13 +3,12 @@
 
 package pb
 
-import proto "github.com/golang/protobuf/proto"
-import fmt "fmt"
-import math "math"
-
 import (
-	context "golang.org/x/net/context"
+	context "context"
+	fmt "fmt"
+	proto "github.com/golang/protobuf/proto"
 	grpc "google.golang.org/grpc"
+	math "math"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -23,27 +22,78 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
 
+type PayloadTypes int32
+
+const (
+	Payload_DATA       PayloadTypes = 0
+	Payload_ResolveIP  PayloadTypes = 1
+	Payload_IPResolved PayloadTypes = 2
+	Payload_Register   PayloadTypes = 3
+	Payload_Connect    PayloadTypes = 5
+	Payload_Connected  PayloadTypes = 6
+	Payload_ConnectErr PayloadTypes = 9
+	Payload_Close      PayloadTypes = 7
+	Payload_Closed     PayloadTypes = 8
+)
+
+var PayloadTypes_name = map[int32]string{
+	0: "DATA",
+	1: "ResolveIP",
+	2: "IPResolved",
+	3: "Register",
+	5: "Connect",
+	6: "Connected",
+	9: "ConnectErr",
+	7: "Close",
+	8: "Closed",
+}
+
+var PayloadTypes_value = map[string]int32{
+	"DATA":       0,
+	"ResolveIP":  1,
+	"IPResolved": 2,
+	"Register":   3,
+	"Connect":    5,
+	"Connected":  6,
+	"ConnectErr": 9,
+	"Close":      7,
+	"Closed":     8,
+}
+
+func (x PayloadTypes) String() string {
+	return proto.EnumName(PayloadTypes_name, int32(x))
+}
+
+func (PayloadTypes) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor_4b6b428ebc276e4f, []int{0, 0}
+}
+
 type Payload struct {
-	Data                 []byte   `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
+	Data                 []byte       `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`
+	Type                 PayloadTypes `protobuf:"varint,2,opt,name=type,proto3,enum=pb.PayloadTypes" json:"type,omitempty"`
+	Addr                 *IPAddr      `protobuf:"bytes,3,opt,name=addr,proto3" json:"addr,omitempty"`
+	SessionId            string       `protobuf:"bytes,4,opt,name=sessionId,proto3" json:"sessionId,omitempty"`
+	Error                string       `protobuf:"bytes,5,opt,name=error,proto3" json:"error,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}     `json:"-"`
+	XXX_unrecognized     []byte       `json:"-"`
+	XXX_sizecache        int32        `json:"-"`
 }
 
 func (m *Payload) Reset()         { *m = Payload{} }
 func (m *Payload) String() string { return proto.CompactTextString(m) }
 func (*Payload) ProtoMessage()    {}
 func (*Payload) Descriptor() ([]byte, []int) {
-	return fileDescriptor_msg_1cc3c4c731d1ef0f, []int{0}
+	return fileDescriptor_4b6b428ebc276e4f, []int{0}
 }
+
 func (m *Payload) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_Payload.Unmarshal(m, b)
 }
 func (m *Payload) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_Payload.Marshal(b, m, deterministic)
 }
-func (dst *Payload) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_Payload.Merge(dst, src)
+func (m *Payload) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Payload.Merge(m, src)
 }
 func (m *Payload) XXX_Size() int {
 	return xxx_messageInfo_Payload.Size(m)
@@ -59,6 +109,34 @@ func (m *Payload) GetData() []byte {
 		return m.Data
 	}
 	return nil
+}
+
+func (m *Payload) GetType() PayloadTypes {
+	if m != nil {
+		return m.Type
+	}
+	return Payload_DATA
+}
+
+func (m *Payload) GetAddr() *IPAddr {
+	if m != nil {
+		return m.Addr
+	}
+	return nil
+}
+
+func (m *Payload) GetSessionId() string {
+	if m != nil {
+		return m.SessionId
+	}
+	return ""
+}
+
+func (m *Payload) GetError() string {
+	if m != nil {
+		return m.Error
+	}
+	return ""
 }
 
 type IPAddr struct {
@@ -77,16 +155,17 @@ func (m *IPAddr) Reset()         { *m = IPAddr{} }
 func (m *IPAddr) String() string { return proto.CompactTextString(m) }
 func (*IPAddr) ProtoMessage()    {}
 func (*IPAddr) Descriptor() ([]byte, []int) {
-	return fileDescriptor_msg_1cc3c4c731d1ef0f, []int{1}
+	return fileDescriptor_4b6b428ebc276e4f, []int{1}
 }
+
 func (m *IPAddr) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_IPAddr.Unmarshal(m, b)
 }
 func (m *IPAddr) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_IPAddr.Marshal(b, m, deterministic)
 }
-func (dst *IPAddr) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_IPAddr.Merge(dst, src)
+func (m *IPAddr) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_IPAddr.Merge(m, src)
 }
 func (m *IPAddr) XXX_Size() int {
 	return xxx_messageInfo_IPAddr.Size(m)
@@ -133,8 +212,38 @@ func (m *IPAddr) GetCreateAt1() int64 {
 }
 
 func init() {
+	proto.RegisterEnum("pb.PayloadTypes", PayloadTypes_name, PayloadTypes_value)
 	proto.RegisterType((*Payload)(nil), "pb.Payload")
 	proto.RegisterType((*IPAddr)(nil), "pb.IPAddr")
+}
+
+func init() { proto.RegisterFile("pb/msg.proto", fileDescriptor_4b6b428ebc276e4f) }
+
+var fileDescriptor_4b6b428ebc276e4f = []byte{
+	// 368 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x84, 0x92, 0xcd, 0x6e, 0xd4, 0x30,
+	0x10, 0xc7, 0xeb, 0x6c, 0xb2, 0xbb, 0x9e, 0x2c, 0x95, 0x19, 0x71, 0x88, 0x10, 0x1f, 0x51, 0x24,
+	0x50, 0x2e, 0x84, 0x76, 0x79, 0x82, 0xd0, 0x72, 0xc8, 0xcd, 0xb2, 0xe0, 0x0a, 0x4a, 0xea, 0x51,
+	0x15, 0x29, 0x8d, 0x23, 0xdb, 0x20, 0x96, 0x1b, 0x57, 0x9e, 0x81, 0x87, 0x45, 0xf1, 0xa6, 0x65,
+	0x6f, 0xbd, 0xcd, 0xff, 0x63, 0x14, 0xcd, 0x2f, 0x86, 0xdd, 0xd4, 0xbd, 0xbf, 0x73, 0xb7, 0xd5,
+	0x64, 0x8d, 0x37, 0x18, 0x4d, 0x5d, 0xf1, 0x37, 0x82, 0x8d, 0x6c, 0x0f, 0x83, 0x69, 0x35, 0x22,
+	0xc4, 0xba, 0xf5, 0x6d, 0xc6, 0x72, 0x56, 0xee, 0x54, 0x98, 0xf1, 0x0d, 0xc4, 0xfe, 0x30, 0x51,
+	0x16, 0xe5, 0xac, 0x3c, 0xdf, 0x3f, 0xad, 0xa6, 0xae, 0x5a, 0xea, 0xd5, 0xec, 0x3b, 0x15, 0x62,
+	0x7c, 0x05, 0x71, 0xab, 0xb5, 0xcd, 0x56, 0x39, 0x2b, 0xd3, 0x3d, 0xcc, 0xb5, 0x46, 0xd6, 0x5a,
+	0x5b, 0x15, 0x7c, 0x7c, 0x01, 0xdc, 0x91, 0x73, 0xbd, 0x19, 0x1b, 0x9d, 0xc5, 0x39, 0x2b, 0xb9,
+	0xfa, 0x6f, 0xe0, 0x33, 0x48, 0xc8, 0x5a, 0x63, 0xb3, 0x24, 0x24, 0x47, 0x51, 0xfc, 0x66, 0x90,
+	0x84, 0x6f, 0xe0, 0x16, 0xe2, 0xeb, 0xfa, 0x73, 0x2d, 0xce, 0xf0, 0x09, 0x70, 0x45, 0xce, 0x0c,
+	0x3f, 0xa8, 0x91, 0x82, 0xe1, 0x39, 0x40, 0x23, 0x17, 0x43, 0x8b, 0x08, 0x77, 0xb0, 0x55, 0x74,
+	0xdb, 0x3b, 0x4f, 0x56, 0xac, 0x30, 0x85, 0xcd, 0x95, 0x19, 0x47, 0xba, 0xf1, 0x22, 0x99, 0x37,
+	0x17, 0x41, 0x5a, 0xac, 0xe7, 0xcd, 0x45, 0x7e, 0xb2, 0x56, 0x70, 0xe4, 0x90, 0x5c, 0x0d, 0xc6,
+	0x91, 0xd8, 0x20, 0xc0, 0x3a, 0x8c, 0x5a, 0x6c, 0x8b, 0x3f, 0x0c, 0xd6, 0xc7, 0x43, 0x30, 0x83,
+	0xcd, 0x7c, 0x0a, 0x39, 0x17, 0x00, 0x71, 0x75, 0x2f, 0x1f, 0xb8, 0x45, 0x27, 0xdc, 0x10, 0xe2,
+	0x5f, 0x66, 0xa4, 0x00, 0x84, 0xab, 0x30, 0xe3, 0x6b, 0xe0, 0x37, 0x96, 0x5a, 0x4f, 0xdf, 0x5a,
+	0x1f, 0x20, 0xac, 0x3e, 0x46, 0x17, 0x91, 0xda, 0x1e, 0xcd, 0xda, 0xe3, 0x4b, 0x80, 0x87, 0xc2,
+	0x65, 0x80, 0xb1, 0x52, 0xfc, 0x3e, 0xbd, 0xdc, 0x7f, 0x85, 0x44, 0x5a, 0xf3, 0xf3, 0x80, 0x6f,
+	0x21, 0x96, 0xdf, 0xef, 0x26, 0x4c, 0x4f, 0x7e, 0xc7, 0xf3, 0x53, 0x51, 0x9c, 0x95, 0xec, 0x82,
+	0xe1, 0x3b, 0x48, 0x65, 0x3f, 0xd1, 0xd0, 0x8f, 0xf4, 0xe5, 0x5a, 0x3e, 0x56, 0xef, 0xd6, 0xe1,
+	0x59, 0x7c, 0xf8, 0x17, 0x00, 0x00, 0xff, 0xff, 0x58, 0x5c, 0xdd, 0x7d, 0x26, 0x02, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -149,8 +258,6 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type ProxyClient interface {
-	Echo(ctx context.Context, in *Payload, opts ...grpc.CallOption) (*Payload, error)
-	ResolveIP(ctx context.Context, in *IPAddr, opts ...grpc.CallOption) (*IPAddr, error)
 	Pump(ctx context.Context, opts ...grpc.CallOption) (Proxy_PumpClient, error)
 	PipelineUDP(ctx context.Context, opts ...grpc.CallOption) (Proxy_PipelineUDPClient, error)
 }
@@ -161,24 +268,6 @@ type proxyClient struct {
 
 func NewProxyClient(cc *grpc.ClientConn) ProxyClient {
 	return &proxyClient{cc}
-}
-
-func (c *proxyClient) Echo(ctx context.Context, in *Payload, opts ...grpc.CallOption) (*Payload, error) {
-	out := new(Payload)
-	err := c.cc.Invoke(ctx, "/pb.Proxy/Echo", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *proxyClient) ResolveIP(ctx context.Context, in *IPAddr, opts ...grpc.CallOption) (*IPAddr, error) {
-	out := new(IPAddr)
-	err := c.cc.Invoke(ctx, "/pb.Proxy/ResolveIP", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
 }
 
 func (c *proxyClient) Pump(ctx context.Context, opts ...grpc.CallOption) (Proxy_PumpClient, error) {
@@ -245,50 +334,12 @@ func (x *proxyPipelineUDPClient) Recv() (*Payload, error) {
 
 // ProxyServer is the server API for Proxy service.
 type ProxyServer interface {
-	Echo(context.Context, *Payload) (*Payload, error)
-	ResolveIP(context.Context, *IPAddr) (*IPAddr, error)
 	Pump(Proxy_PumpServer) error
 	PipelineUDP(Proxy_PipelineUDPServer) error
 }
 
 func RegisterProxyServer(s *grpc.Server, srv ProxyServer) {
 	s.RegisterService(&_Proxy_serviceDesc, srv)
-}
-
-func _Proxy_Echo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Payload)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ProxyServer).Echo(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/pb.Proxy/Echo",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProxyServer).Echo(ctx, req.(*Payload))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Proxy_ResolveIP_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(IPAddr)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ProxyServer).ResolveIP(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/pb.Proxy/ResolveIP",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProxyServer).ResolveIP(ctx, req.(*IPAddr))
-	}
-	return interceptor(ctx, in, info, handler)
 }
 
 func _Proxy_Pump_Handler(srv interface{}, stream grpc.ServerStream) error {
@@ -346,16 +397,7 @@ func (x *proxyPipelineUDPServer) Recv() (*Payload, error) {
 var _Proxy_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "pb.Proxy",
 	HandlerType: (*ProxyServer)(nil),
-	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "Echo",
-			Handler:    _Proxy_Echo_Handler,
-		},
-		{
-			MethodName: "ResolveIP",
-			Handler:    _Proxy_ResolveIP_Handler,
-		},
-	},
+	Methods:     []grpc.MethodDesc{},
 	Streams: []grpc.StreamDesc{
 		{
 			StreamName:    "Pump",
@@ -371,26 +413,4 @@ var _Proxy_serviceDesc = grpc.ServiceDesc{
 		},
 	},
 	Metadata: "pb/msg.proto",
-}
-
-func init() { proto.RegisterFile("pb/msg.proto", fileDescriptor_msg_1cc3c4c731d1ef0f) }
-
-var fileDescriptor_msg_1cc3c4c731d1ef0f = []byte{
-	// 247 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x84, 0x90, 0x4f, 0x4e, 0x02, 0x31,
-	0x14, 0xc6, 0xe9, 0x30, 0x80, 0xf3, 0x60, 0xf5, 0x56, 0x0d, 0x09, 0x91, 0x34, 0xd1, 0xcc, 0xc6,
-	0x11, 0xf4, 0x04, 0x18, 0x5d, 0xb0, 0x6b, 0x9a, 0xb8, 0x36, 0x1d, 0xfa, 0xa2, 0x24, 0x03, 0x6d,
-	0xda, 0x6a, 0xc4, 0x23, 0x78, 0x13, 0x6f, 0x69, 0xa6, 0x08, 0xb2, 0xd2, 0xdd, 0xf7, 0xe7, 0xf7,
-	0x35, 0x6d, 0x61, 0xe4, 0xea, 0xeb, 0x4d, 0x78, 0xae, 0x9c, 0xb7, 0xd1, 0x62, 0xe6, 0x6a, 0x31,
-	0x81, 0x81, 0xd4, 0xbb, 0xc6, 0x6a, 0x83, 0x08, 0xb9, 0xd1, 0x51, 0x73, 0x36, 0x65, 0xe5, 0x48,
-	0x25, 0x2d, 0x3e, 0x19, 0xf4, 0x97, 0x72, 0x61, 0x8c, 0x47, 0x0e, 0x03, 0x6d, 0x8c, 0xa7, 0x10,
-	0x12, 0x51, 0xa8, 0x83, 0x3d, 0x0e, 0xb3, 0xdf, 0x61, 0x9b, 0x7d, 0xd8, 0x2d, 0xf1, 0x6e, 0x42,
-	0x93, 0xc6, 0x73, 0x28, 0x56, 0x9e, 0x74, 0xa4, 0x27, 0x1d, 0x79, 0x3e, 0x65, 0x65, 0xf7, 0x2e,
-	0x9b, 0x65, 0xea, 0x6c, 0x1f, 0x2e, 0x22, 0x4e, 0x00, 0x8e, 0xc0, 0x9c, 0xf7, 0x5a, 0x42, 0x15,
-	0x87, 0x76, 0x7e, 0xf3, 0xc5, 0xa0, 0x27, 0xbd, 0x7d, 0xdf, 0xa1, 0x80, 0xfc, 0x61, 0xf5, 0x62,
-	0x71, 0x58, 0xb9, 0xba, 0xfa, 0xb9, 0xff, 0xf8, 0xd4, 0x88, 0x0e, 0x5e, 0x40, 0xa1, 0x28, 0xd8,
-	0xe6, 0x8d, 0x96, 0x12, 0xa1, 0xed, 0xf6, 0x0f, 0x19, 0x9f, 0x68, 0xd1, 0xc1, 0x4b, 0xc8, 0xe5,
-	0xeb, 0xc6, 0xfd, 0x75, 0x54, 0xc9, 0x66, 0x0c, 0xaf, 0x60, 0x28, 0xd7, 0x8e, 0x9a, 0xf5, 0x96,
-	0x1e, 0xef, 0xe5, 0x7f, 0x78, 0xdd, 0x4f, 0x5f, 0x7c, 0xfb, 0x1d, 0x00, 0x00, 0xff, 0xff, 0xf2,
-	0xb8, 0xd1, 0x42, 0x72, 0x01, 0x00, 0x00,
 }

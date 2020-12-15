@@ -9,58 +9,53 @@ import (
 )
 
 var certPEMBlock = []byte(`-----BEGIN CERTIFICATE-----
-MIIEMDCCAxigAwIBAgIJAO8uVrXywwnLMA0GCSqGSIb3DQEBBQUAMG0xCzAJBgNV
-BAYTAkNIMQ0wCwYDVQQIEwQxMDI0MQ0wCwYDVQQHEwQxMDI0MQ0wCwYDVQQKEwQx
-MDI0MQ0wCwYDVQQLEwQxMDI0MQ0wCwYDVQQDEwQxMDI0MRMwEQYJKoZIhvcNAQkB
-FgQxMDI0MB4XDTE2MDMyNjAwMTkwMloXDTE5MDMyNjAwMTkwMlowbTELMAkGA1UE
-BhMCQ0gxDTALBgNVBAgTBDEwMjQxDTALBgNVBAcTBDEwMjQxDTALBgNVBAoTBDEw
-MjQxDTALBgNVBAsTBDEwMjQxDTALBgNVBAMTBDEwMjQxEzARBgkqhkiG9w0BCQEW
-BDEwMjQwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCsHh0cmk/GGgsA
-YzKnexeCMgciVR5kFAYzXGWlirfBvRi1hmVJ14guWslKpoM40kuWx77tKhoilcQA
-ACfsrmRrXJYZ6z5Y6oawXxjpMEkDXZdje09VPTiTUQaFTjcb7qq9l0AjdBonpMb3
-4In9DwtyWEeQCJYo0gnxZcYOVwdjO8yskM80dgSjfrBMeIzV4bDDxajGQq+ce/gS
-9t3TfColdQhXGFBY/KbOHPTBzxCAt2KN2VyiTFWdw2jhe1k/NRgKjAoMQWmQR9lq
-NeKQ8MGhtGT1drsVHVPueT+CW1lmb4ec3ga3v/wiRxXDJRuimiAs2hFJUgN6fkBk
-FGYSIe11AgMBAAGjgdIwgc8wHQYDVR0OBBYEFF9Wev8a9eJzLDMvT1wzzWVKvtlp
-MIGfBgNVHSMEgZcwgZSAFF9Wev8a9eJzLDMvT1wzzWVKvtlpoXGkbzBtMQswCQYD
-VQQGEwJDSDENMAsGA1UECBMEMTAyNDENMAsGA1UEBxMEMTAyNDENMAsGA1UEChME
-MTAyNDENMAsGA1UECxMEMTAyNDENMAsGA1UEAxMEMTAyNDETMBEGCSqGSIb3DQEJ
-ARYEMTAyNIIJAO8uVrXywwnLMAwGA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQEFBQAD
-ggEBAEWXMh+5nAIdaSwsDe/EkaP8qNr4oDj/8DRVRq7J/7b5ts1b1RI8VmdE/AMi
-x2S7Dsh51JvG3u1Oss+PU44uLgGKP6RtBpqeo8uvlCgpWY2Qve5m2r/AR3M75AjB
-Rpvdtj7r4BD7uDTYseDazqZpC4A7tKqF/PomkWseA+QQHUjedkEk30e/7nHdZZoV
-s/i2kgkU7Rna1wqesihX8SRfLCDvyckuPFgimz0ry+TIpuFgm1orytjcjYsMv6ax
-UG+yA/zpmkIfvSrv6Gc6u+2hfBZREMcbyaqRxFlTOxRvVeKt14+pdJ90tc5Jq0aJ
-aiJQH2u5zeca9eFkLZzcTUZmgvw=
+MIIDNzCCAh+gAwIBAgIJALY2lHCZVr3YMA0GCSqGSIb3DQEBCwUAMBgxFjAUBgNV
+BAMMDWZiLnpoZW4td28uY24wHhcNMjAxMjE0MDg1NzQzWhcNMzAxMjEyMDg1NzQz
+WjBwMQswCQYDVQQGEwJDTjEQMA4GA1UECAwHQmVpamluZzEQMA4GA1UEBwwHQmVp
+amluZzEUMBIGA1UECgwLVW5pdGVkU3RhY2sxDzANBgNVBAsMBkRldm9wczEWMBQG
+A1UEAwwNZmIuemhlbi13by5jbjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoC
+ggEBAPLY/Xqj5hQnfIf4/oEBRio7enMH8uVJc9IrkL6WH/YB1YaICKuwqXLJTw7j
+y3YylEfervsw6Me3a7AYf0ZklnEpuvZ/WzX4PnvvlJPqb0A/SxqNeS9vxHkHHeBM
+rru+X+NNlZEE01C+s8ogiO7QD2BDWOHBvp+Xyq9nzqWOnE3lRPZQd9gLtZOkzdSO
+Ls0USwqkswLZPNK3HI+xR9R8TVKec83fpF7DnFDH91fm913ftWs09ot/ZkKF1qBa
+OBUXo664VfKzMHVs/jZti4tL0niB+ucsOai/t9ReoXP8PsuVZagrPxUaCrkSXLn0
+ov/hTh29MGUrlEIM1GGCM1mlnV0CAwEAAaMsMCowKAYDVR0RBCEwH4INZmIuemhl
+bi13by5jboIOZmIuemhlbi13by5jb20wDQYJKoZIhvcNAQELBQADggEBAI6J1rl9
+KRx5r5NfVCorj4pct82xKR0tcHcw3brBoxHnasvflLkP1R8izMu4g9fxIUIr2Uht
+r3tfdZL15+fDTQHfubNgjpbEdg9UPyxAPMdB1rKHcrSddI1k9Z/K806kfcD8yIin
+s4muzeicVIgbWA6aFS+h8dRW3kYpISKf5dj+8rj/WOkIcMo4OmyIEfUEicH1rOjG
+ddoBiJaOORu9ePhMJfrsFoKJTzbJL6d0TwEIhe2PlUVUzfhMoHH8FFNUFw7unzwy
+kwROycfkEavpDmHWUTIEf7kHv7CKbNhOHf+18FWktmwl4SOWstpjdBRDY0e/9wAb
+u0p/KgBJATPlV50=
 -----END CERTIFICATE-----
 `)
 
 var keyPEMBlock = []byte(`-----BEGIN RSA PRIVATE KEY-----
-MIIEogIBAAKCAQEArB4dHJpPxhoLAGMyp3sXgjIHIlUeZBQGM1xlpYq3wb0YtYZl
-SdeILlrJSqaDONJLlse+7SoaIpXEAAAn7K5ka1yWGes+WOqGsF8Y6TBJA12XY3tP
-VT04k1EGhU43G+6qvZdAI3QaJ6TG9+CJ/Q8LclhHkAiWKNIJ8WXGDlcHYzvMrJDP
-NHYEo36wTHiM1eGww8WoxkKvnHv4Evbd03wqJXUIVxhQWPymzhz0wc8QgLdijdlc
-okxVncNo4XtZPzUYCowKDEFpkEfZajXikPDBobRk9Xa7FR1T7nk/gltZZm+HnN4G
-t7/8IkcVwyUbopogLNoRSVIDen5AZBRmEiHtdQIDAQABAoIBAEMSfR+/VqUJUw40
-mfHAOxoGatdLOkufrgbn08id9Rvvl6htlh0fe7css9J+bxZ+hOxeLJ35UTP3Duk9
-JlHKZ+Gas/env6Ugx5oFhQyiP2GrYCppTDIYaGqoIZVjNICTEkBNp7XpMaQPR2Yj
-P0K5USmfE0wivHlt2GgU1AiUi5F0gYSYpGoahbgG030Mv+GmKtX69/KwE3mgrNQ/
-54Czd6r+nHaCE9g0DfHwkIJrHHaWNa7DMoU6ws0glAFWAz8znYCZxPZfMp2oSEDn
-BjG//aGrT/jCvD+jrTcJhc/0sVhrDXPmqz49OXVTLjgRmwrEkjPrWnpRA5VKu4a7
-GjBFyWECgYEA2lvtSw+MA4O5ed9WE7LyldQojXrBU/gdBKs/OpyMv1bJTYUMkaPn
-BZ2fVTJV327bA8yMNrM/Reiqx373NGcw8h57WFbLjwMV72tvy7sOmg8MYTCiNarU
-fsigr3cdAoAwonSkUUPJHsJrlLca5pN0KXajCDg80BnMvsYnf+b2V3kCgYEAycmT
-RwLVYIQS7DDO/CUHTErIa6jte+bjTTW7G7nG/LhqPThS/b6ohzez6wztFspIldYs
-G0tO25q4NZa9jg1noM2CesvsGwlhxNrYbAK9CtZ6fWXgeDMvF71Hh1F+8LwfD4It
-tXGiU4pfUp+5OSKZN/jtqqeyYE/MywwXc4gfOt0CgYBIqFQCKO8u8DLUUbNDpMTB
-hDHmOdWAikullRHZ/+N5e3hKOh5fi8lAfh1ZbQFT8oAf+H0jamuAaJYDAcViA4Au
-4GOsllzvflhbLUWq5dhK/Pzijhs7fldsxHdrS1g0z9DfDa7rd4HBoXHIr1DdLm11
-qos/He9mU19kj2zvSzvnCQKBgCMVxGDNclJUxIGCvwqCWbF/Mzfc6GXpsE3lcMIS
-XDHm0roQSAXMl7rjCYpt9e9HfrVmxsZ8Ipr2XN8cdZr0Y7dG5E/7kvLkf7ZdotGs
-7DetMSEKjKv5ok+LXpt9pQewfeoRZWct+d5yqb5Q/UCc7m0YACLzA4XRejc3xAAX
-g+6VAoGAI5n5EAi10YAm1P+E7sWtipdxe+FTXyketmWoty6pVw6wWrAgT8/HpNyG
-Z93rnVEtVNJ9kqNPqrn4Mn4320cJxGzVNrOKrS8NAlccbKqkuZ3fMr/oZ6/8o5aU
-zXPJfyC/bgm20s7B029Ojmwy3ReoTY2oL2hCeRRiUXp82Az+wCQ=
+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
 -----END RSA PRIVATE KEY-----
 `)
 
@@ -75,11 +70,24 @@ func ServerTLS() credentials.TransportCredentials {
 }
 
 // ClientTLS client tls
-func ClientTLS() credentials.TransportCredentials {
+func ClientTLS(host string) credentials.TransportCredentials {
 	cp := x509.NewCertPool()
 	if !cp.AppendCertsFromPEM(certPEMBlock) {
 		log.Fatal("Credentials: Failed to append certificates")
 	}
 
-	return credentials.NewClientTLSFromCert(cp, "1024")
+	return credentials.NewClientTLSFromCert(cp, host)
 }
+
+// openssl req -new -sha256 \
+//     -key ca.key \
+//     -subj "/C=CN/ST=Beijing/L=Beijing/O=UnitedStack/OU=Devops/CN=fb.zhen-wo.cn" \
+//     -reqexts SAN \
+//     -config <(cat /System/Library/OpenSSL/openssl.cnf \
+//         <(printf "[SAN]\nsubjectAltName=DNS:fb.zhen-wo.cn,DNS:fb.zhen-wo.com")) \
+//     -out zchd.csr
+
+// openssl x509 -req -days 3650 \
+//     -in zchd.csr -CA ca.crt -CAkey ca.key -CAcreateserial \
+//     -extfile <(printf "subjectAltName=DNS:fb.zhen-wo.cn,DNS:fb.zhen-wo.com") \
+//     -out zchd.crt

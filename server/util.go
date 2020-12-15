@@ -20,17 +20,3 @@ func parseCIDR(s string) *net.IPNet {
 	}
 	return n
 }
-
-func isLocal(addr *net.TCPAddr) bool {
-	if addr.IP.String() == "127.0.0.1" {
-		return true
-	}
-
-	for i := range localAddrList {
-		if localAddrList[i].Contains(addr.IP) {
-			return true
-		}
-	}
-
-	return false
-}

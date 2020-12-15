@@ -4,6 +4,21 @@ package pb;
 
 message Payload {
     bytes data = 1;
+    enum types {
+        DATA = 0;
+        ResolveIP = 1;
+        IPResolved = 2;
+        Register = 3;//客户端注册　
+        Connect = 5;
+        Connected = 6;
+        ConnectErr = 9;
+        Close = 7;
+        Closed = 8;
+    }
+    types type = 2;
+    IPAddr addr = 3;//用于进行ip解析
+    string sessionId = 4;
+    string error = 5;
 }
 
 message IPAddr {
@@ -16,9 +31,9 @@ message IPAddr {
 }
 
 service Proxy {
-    rpc Echo (Payload) returns (Payload) {};
+    // rpc Echo (Payload) returns (Payload) {};
 
-    rpc ResolveIP(IPAddr) returns (IPAddr) {};
+    // rpc ResolveIP(IPAddr) returns (ACK) {};
 
     rpc Pump (stream Payload) returns (stream Payload) {};
 
